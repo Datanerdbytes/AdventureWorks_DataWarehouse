@@ -3,8 +3,12 @@
 DDL Script: Create Bronze Tables
 =============================================================================
 Script Purpose:
-    This script creates tables in the 'bronze' schema, dropping existing tables
+    - This script creates tables in the 'bronze' schema, dropping existing tables
     if they already exists.
+    - The  script also creates a table for Audit Log to log peformance metrics 
+    (BatchID, StartTime, EndTime, RowCount, Status) which can be used to track pipeline
+    efficiency over time.
+
     
     Run this script to re-define the DDL structure of 'bronze' tables.
 =============================================================================
@@ -124,7 +128,8 @@ CREATE TABLE bronze.DimCustomer (
     AddressLine2 NVARCHAR(120),
     Phone NVARCHAR(20),
     DateFirstPurchase DATE,
-    CommuteDistance NVARCHAR(15)
+    CommuteDistance NVARCHAR(15),
+    RowHash BINARY(32) NULL
 )
 
 IF OBJECT_ID('bronze.DimReseller', 'U') IS NOT NULL
@@ -151,7 +156,8 @@ CREATE TABLE bronze.DimReseller (
     MinPaymentType TINYINT,
     MinPaymentAmount MONEY,
     AnnualRevenue MONEY,
-    YearOpened INT
+    YearOpened INT,
+    RowHash BINARY(32) NULL
 )
 
 IF OBJECT_ID('bronze.DimGeography', 'U') IS NOT NULL
@@ -169,7 +175,8 @@ CREATE TABLE bronze.DimGeography (
     FrenchCountryRegionName NVARCHAR(50),
     PostalCode NVARCHAR(15),
     SalesTerritoryKey INT,
-    IpAddressLocator NVARCHAR(15)
+    IpAddressLocator NVARCHAR(15),
+    RowHash BINARY(32) NULL
 )
 
 IF OBJECT_ID('bronze.DimSalesTerritory', 'U') IS NOT NULL
@@ -182,7 +189,8 @@ CREATE TABLE bronze.DimSalesTerritory (
     SalesTerritoryRegion NVARCHAR(50),
     SalesTerritoryCountry NVARCHAR(50),
     SalesTerritoryGroup NVARCHAR(50),
-    SalesTerritoryImage VARBINARY
+    SalesTerritoryImage VARBINARY(MAX),
+    RowHash BINARY(32) NULL
 )
 
 IF OBJECT_ID('bronze.DimProduct', 'U') IS NOT NULL
@@ -225,7 +233,8 @@ CREATE TABLE bronze.DimProduct (
     TurkishDescription NVARCHAR(400),
     StartDate DATETIME,
     EndDate DATETIME,
-    Status NVARCHAR(7)
+    Status NVARCHAR(7),
+    RowHash BINARY(32) NULL
 )
 
 IF OBJECT_ID('bronze.DimProductSubcategory', 'U') IS NOT NULL
@@ -238,7 +247,8 @@ CREATE TABLE bronze.DimProductSubcategory (
     EnglishProductSubcategoryName NVARCHAR(50),
     SpanishProductSubcategoryName NVARCHAR(50),
     FrenchProductSubcategoryName NVARCHAR(50),
-    ProductCategoryKey INT
+    ProductCategoryKey INT,
+    RowHash BINARY(32) NULL
 )
 
 IF OBJECT_ID('bronze.DimProductCategory', 'U') IS NOT NULL
@@ -250,7 +260,8 @@ CREATE TABLE bronze.DimProductCategory (
     ProductCategoryAlternateKey INT,
     EnglishProductCategoryName NVARCHAR(50),
     SpanishProductCategoryName NVARCHAR(50),
-    FrenchProductCategoryName NVARCHAR(50)
+    FrenchProductCategoryName NVARCHAR(50),
+    RowHash BINARY(32) NULL
 )
 
 IF OBJECT_ID('bronze.DimDate', 'U') IS NOT NULL
@@ -276,7 +287,8 @@ CREATE TABLE bronze.DimDate (
     CalendarSemester TINYINT,
     FiscalQuarter TINYINT,
     FiscalYear SMALLINT,
-    FiscalSemester TINYINT
+    FiscalSemester TINYINT,
+    RowHash BINARY(32) NULL
 )
 
 IF OBJECT_ID('bronze.DimEmployee', 'U') IS NOT NULL
@@ -314,6 +326,41 @@ CREATE TABLE bronze.DimEmployee (
     StartDate DATE,
     EndDate DATE,
     Status NVARCHAR(50),
-    EmployeePhoto VARBINARY(MAX)
+    EmployeePhoto VARBINARY(MAX),
+    RowHash BINARY(32) NULL
 )
-    
+
+/*
+===================================================================
+Auditing logs Tables
+===================================================================
+*/
+IF OBJECT_ID('bronze.Pipeline_Log', 'U') IS NOT NULL
+    DROP TABLE bronze.Pipeline_Log;
+GO
+
+CREATE TABLE bronze.Pipeline_Log (
+    LogID INT IDENTITY(180,1) PRIMARY KEY,
+    TableName VARCHAR(100),
+    StartTime DATETIME,
+    EndTime DATETIME,
+    DurationSeconds INT,
+    RowsInserted INT,
+    Status VARCHAR(20),
+    ErrorMessage NVARCHAR(MAX) NULL
+)
+
+/*
+===================================================================
+Date WaterMarks Tables
+===================================================================
+*/
+
+IF OBJECT_ID('bronze.Pipeline_Watermarks', 'U') IS NOT NULL
+    DROP TABLE bronze.Pipeline_Watermarks;
+GO
+
+CREATE TABLE bronze.Pipeline_Watermarks (
+    TableName VARCHAR(100) PRIMARY KEY,
+    LastLoadedDate DATETIME NOT NULL
+);
