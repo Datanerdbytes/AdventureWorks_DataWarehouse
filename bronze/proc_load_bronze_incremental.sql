@@ -51,7 +51,7 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             =========================================================================
         */
             SET @start_time = GETDATE();
-
+            
             -- DYNAMIC WATERMARK LOOKUP: Fallback to MIN(OrderDate) if unseeded
             SELECT @LastWaterMark = ISNULL(
                 (SELECT LastLoadedDate FROM bronze.Pipeline_Watermarks WHERE TableName = 'bronze.FactInternetSales'),
@@ -80,12 +80,12 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             
             SELECT @rows_affected = @@ROWCOUNT;
 
-            -- Update Watermark forward
+            -- Update Watermark
             UPDATE bronze.Pipeline_Watermarks
             SET LastLoadedDate = (SELECT ISNULL(MAX(OrderDate), @LastWaterMark) FROM bronze.STG_FactInternetSales)
             WHERE TableName = 'bronze.FactInternetSales';
 
-            -- If the table wasn't in the tracking table yet, seed it now
+            -- If the table wasn't in the tracking table yet
             IF @@ROWCOUNT = 0
             BEGIN
                 INSERT INTO bronze.Pipeline_Watermarks (TableName, LastLoadedDate)
@@ -121,7 +121,8 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
                 SalesOrderNumber, SalesOrderLineNumber, RevisionNumber, OrderQuantity, UnitPrice, ExtendedAmount, UnitPriceDiscountPct,
                 DiscountAmount, ProductStandardCost, TotalProductCost, SalesAmount, TaxAmt, Freight, CarrierTrackingNumber, CustomerPONumber,
                 OrderDate, DueDate, ShipDate
-            ) SELECT stg.* FROM bronze.STG_FactResellerSales stg
+            ) 
+            SELECT stg.* FROM bronze.STG_FactResellerSales stg
             WHERE NOT EXISTS (
                 SELECT 1 FROM bronze.FactResellerSales b
                 WHERE b.SalesOrderNumber = stg.SalesOrderNumber
@@ -140,7 +141,7 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
                 VALUES ('bronze.FactResellerSales', (SELECT ISNULL(MAX(OrderDate), @LastWaterMark) FROM bronze.STG_FactResellerSales));
             END
 
-            -- Audito Log
+            -- Audit Log
             SET @end_time = GETDATE();
             INSERT INTO bronze.Pipeline_Log VALUES ('bronze.FactResellerSales (Incremental))', @start_time, @end_time, DATEDIFF(second, @start_time, @end_time), @rows_affected, 'SUCCESS',NULL);
 
@@ -153,7 +154,7 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             -- DYNAMIC WATERMARK LOOKUP: Fallback to MIN(OrderDate) if unseeded
             SELECT @LastWaterMark = ISNULL(
                  (SELECT LastLoadedDate FROM bronze.Pipeline_Watermarks WHERE TableName = 'bronze.FactSalesQuota'),
-                (SELECT MIN(Date) FROM dbo.FactSalesQuota)
+                 (SELECT MIN(Date) FROM dbo.FactSalesQuota)
             )
 
             -- Empty Staging
@@ -163,6 +164,7 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             SELECT * FROM dbo.FactSalesQuota WHERE [Date] > @LastWaterMark
 
             INSERT INTO bronze.FactSalesQuota (SalesQuotaKey,EmployeeKey,DateKey,CalendarYear,CalendarQuarter,SalesAmountQuota,Date)
+            
             SELECT stg.* FROM bronze.STG_FactSalesQuota stg 
             WHERE NOT EXISTS (
                 SELECT 1 FROM bronze.FactSalesQuota b  
@@ -217,7 +219,7 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
                 YearlyIncome, TotalChildren, NumberChildrenAtHome, EnglishEducation, 
                 SpanishEducation, FrenchEducation, EnglishOccupation, SpanishOccupation, FrenchOccupation, 
                 HouseOwnerFlag, NumberCarsOwned, AddressLine1, AddressLine2, Phone, DateFirstPurchase, CommuteDistance,
-                -- Generate Row Has (Using core descriptive columns as a sample)
+                -- Generate Row Hash 
                 HASHBYTES('SHA2_256',
                     ISNULL(CAST(CustomerKey AS NVARCHAR(50)), '') + '|' +
                     ISNULL(CAST(GeographyKey AS NVARCHAR(50)), '') + '|' +
@@ -267,7 +269,7 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             FROM bronze.DimCustomer b
             INNER JOIN bronze.STG_DimCustomer stg
             ON b.CustomerKey = stg.CustomerKey
-            WHERE b.RowHash IS NULL OR  b.RowHash <> stg.SourceHash; -- targets only the modifiend records
+            WHERE b.RowHash IS NULL OR  b.RowHash <> stg.SourceHash; -- targets only the modified records
 
             SELECT @updated_rows = @@ROWCOUNT;
 
@@ -353,7 +355,7 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             SELECT @updated_rows = @@ROWCOUNT;
 
             -- Calculate aggregate metrics
-            SET @rows_affected = @inserted_rows + @updated_rows;
+            SET @rows_affected = ISNULL(@inserted_rows, 0) + ISNULL(@updated_rows, 0);
 
             -- Audit Log
             SET @end_time = GETDATE();

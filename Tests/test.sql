@@ -11,6 +11,8 @@ SELECT * FROM bronze.Pipeline_Watermarks
 SELECT OBJECT_DEFINITION(OBJECT_ID('bronze.load_bronze_incremental')); -- Check if your stored precedure is sync with your database
 
 -- Truncate Tables
+TRUNCATE TABLE bronze.Pipeline_Log;
+TRUNCATE TABLE bronze.Pipeline_Watermarks;
 TRUNCATE TABLE bronze.STG_FactInternetSales;
 TRUNCATE TABLE bronze.FactInternetSales;
 TRUNCATE TABLE bronze.STG_FactResellerSales
@@ -37,8 +39,16 @@ TRUNCATE TABLE bronze.STG_DimDate
 TRUNCATE TABLE bronze.DimDate
 TRUNCATE TABLE bronze.Pipeline_Log
 TRUNCATE TABLE bronze.Pipeline_Watermarks
+TRUNCATE TABLE silver.FactInternetSales
+TRUNCATE TABLE silver.FactResellerSales
 
 
+
+
+EXEC bronze.load_bronze
+EXEC bronze.load_bronze_incremental
+EXEC silver.load_silver_dimensions
+EXEC silver.load_silver_facts_incremental
 
 
 
