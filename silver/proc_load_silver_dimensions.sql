@@ -56,6 +56,7 @@ BEGIN
         SET @start_time = GETDATE();
         PRINT 'Truncating Table: silver.DimEmployee';
         TRUNCATE TABLE silver.DimEmployee;
+
         PRINT 'Inserting Data Into: silver.DimEmployee';
         INSERT INTO silver.DimEmployee (
             EmployeeKey, ParentEmployeeKey, EmployeeNationalIDAlternateKey, ParentEmployeeNationalIDAlternateKey,
@@ -115,12 +116,14 @@ BEGIN
         PRINT'';
         SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+        PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
         PRINT '---------------------------';
 
         -- DimCustomer
         SET @start_time = GETDATE();
         PRINT 'Truncating Table: silver.DimCustomer';
         TRUNCATE TABLE silver.DimCustomer;
+
         PRINT 'Inserting Data Into: silver.DimCustomer';
         INSERT INTO silver.DimCustomer (
             CustomerKey, GeographyKey, CustomerAlternateKey, Title, FirstName, MiddleName, LastName, FullName, NameStyle, BirthDate, MaritalStatus,
@@ -174,12 +177,14 @@ BEGIN
         PRINT'';
         SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+        PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
         PRINT '---------------------------';
 
         -- DimReseller
         SET  @start_time = GETDATE();
         PRINT 'Truncationg Table:  DimReseller';
         TRUNCATE TABLE silver.DimReseller;
+
         PRINT 'Inserting Data Into:  DimReseller';
         INSERT INTO silver.DimReseller (
             ResellerKey, GeographyKey, ResellerAlternateKey, Phone, BusinessType, ResellerName, NumberEmployees, 
@@ -223,12 +228,14 @@ BEGIN
         PRINT'';
         SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+        PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
         PRINT '---------------------------';
 
         -- DimGeography
         SET @start_time = GETDATE();
         PRINT 'Truncating Table: DimGeography';
         TRUNCATE TABLE silver.DimGeography;
+
         PRINT 'Inserting Data Into: DimGeography';
         INSERT INTO silver.DimGeography (
             GeographyKey, City, StateProvinceCode, StateProvinceName, CountryRegionCode, EnglishCountryRegionName, 
@@ -256,6 +263,7 @@ BEGIN
         PRINT'';
         SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+        PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
         PRINT '---------------------------';
 
         --DimSalesTerritory
@@ -284,12 +292,14 @@ BEGIN
         PRINT'';
         SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+        PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
         PRINT '---------------------------';
 
         --DinProduct
         SET @start_time = GETDATE();
         PRINT 'Truncating Table: DimProduct';
         TRUNCATE TABLE silver.DimProduct;
+
         PRINT 'Inserting Data Into: DimProduct';
         INSERT INTO silver.DimProduct (
             ProductKey, ProductAlternateKey, ProductSubcategoryKey, WeightUnitMeasureCode, SizeUnitMeasureCode,
@@ -367,12 +377,14 @@ BEGIN
         PRINT'';
         SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+        PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
         PRINT '---------------------------';
 
         --DimProductSubcategory
         SET @start_time = GETDATE();
         PRINT 'Truncating Table: DimProductSubcategory';
         TRUNCATE TABLE silver.DimProductSubcategory;
+
         PRINT 'Inserting Data Into: DimProductSubcategory';
         INSERT INTO silver.DimProductSubcategory (
             ProductSubcategoryKey, ProductSubcategoryAlternateKey, EnglishProductSubcategoryName,
@@ -394,12 +406,14 @@ BEGIN
         PRINT'';
         SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+        PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
         PRINT '---------------------------';
 
         -- DimProductCategory
         SET @start_time = GETDATE();
         PRINT 'Truncating Table: DimProductCategory';
         TRUNCATE TABLE silver.DimProductCategory;
+
         PRINT 'Inserting Data Into: DimProductCategory';
         INSERT INTO silver.DimProductCategory (
             ProductCategoryKey, ProductCategoryAlternateKey, EnglishProductCategoryName, SpanishProductCategoryName,
@@ -420,10 +434,13 @@ BEGIN
         PRINT'';
         SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+        PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
+        PRINT '---------------------------';
         
         -- DimDate
         PRINT 'Truncating Table: silver.DimDate';
         TRUNCATE TABLE silver.DimDate;
+
         PRINT 'Inserting Data Into: silver.DimDate';
         INSERT INTO silver.DimDate (
             DateKey, FullDateAlternateKey, DayNumberOfWeek, EnglishDayNameOfWeek, SpanishDayNameOfWeek,
@@ -461,6 +478,8 @@ BEGIN
         PRINT'';
         SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+        PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
+        PRINT '---------------------------';
 
         -- Complete Batch Transaction
         COMMIT TRANSACTION;
@@ -468,8 +487,6 @@ BEGIN
         SET @batch_end_time = GETDATE();
 
         INSERT INTO bronze.Pipeline_Log VALUES ('BATCH_TOTAL_SILVER_DIM', @batch_start_time, @batch_end_time, DATEDIFF(second, @batch_start_time, @batch_end_time), NULL, 'SUCCESS', NULL);
-
-        PRINT 'Incremental load completed successfully for all Dimension tables.';
 
      /*
         =========================================================================

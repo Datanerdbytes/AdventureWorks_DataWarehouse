@@ -159,6 +159,7 @@ BEGIN
 
         PRINT'';
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+        PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
         PRINT '---------------------------';
 
          /* 
@@ -268,6 +269,7 @@ BEGIN
 
         PRINT'';
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+        PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
         PRINT '---------------------------';
 
          /* 
@@ -342,6 +344,7 @@ BEGIN
 
         PRINT'';
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+        PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
         PRINT '---------------------------';
 
         /* ==========================================================================
@@ -355,8 +358,6 @@ BEGIN
         -- FIXED: Changed log text to state 'BATCH_TOTAL_SILVER_INCREMENTAL' to align with layer processing
         INSERT INTO bronze.Pipeline_Log VALUES ('BATCH_TOTAL_SILVER_INCREMENTAL', @batch_start_time, @batch_end_time, DATEDIFF(second, @batch_start_time, @batch_end_time), NULL, 'SUCCESS', NULL);
 
-        PRINT 'Incremental load completed successfully for all tables.';
-
         /*
         =========================================================================
         Automate Log Retention: Permamently deletes any logs older than  30 days.
@@ -368,7 +369,7 @@ BEGIN
         WHERE StartTime < DATEADD(day, -30, GETDATE());
 
         PRINT '=============================================================';
-        PRINT 'Loading Silver Layer is completed'
+        PRINT 'Loading Fact Tables to Silver Layer is completed'
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @batch_start_time, @batch_end_time) AS NVARCHAR) + ' seconds';
         PRINT '=============================================================';
 

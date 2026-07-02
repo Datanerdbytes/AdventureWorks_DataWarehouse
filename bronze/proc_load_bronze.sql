@@ -50,6 +50,7 @@ BEGIN
 
         PRINT'Truncating Table: bronze.DimProduct';
         TRUNCATE TABLE bronze.DimProduct;
+
         PRINT'Inserting Data Into: bronze.DimProduct';
         INSERT INTO bronze.DimProduct (
             ProductKey, ProductAlternateKey, ProductSubcategoryKey, WeightUnitMeasureCode, SizeUnitMeasureCode, EnglishProductName,
@@ -73,6 +74,7 @@ BEGIN
         PRINT'';
         SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+        PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
         PRINT '---------------------------';
 
         -- DimProductSubcategory
@@ -106,13 +108,16 @@ BEGIN
         PRINT'';
         SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+        PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR)
         PRINT '---------------------------';
+
 
         -- DimProductCategory
         SET @start_time = GETDATE();
 
         PRINT'Truncating Table: bronze.DimProductCategory';
         TRUNCATE TABLE bronze.DimProductCategory;
+
         PRINT'Inserting Data Into: bronze.DimProductCategory';
         INSERT INTO bronze.DimProductCategory (
             ProductCategoryKey,
@@ -136,6 +141,7 @@ BEGIN
         PRINT '';
         SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+        PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
         PRINT '---------------------------';
         
         PRINT  '------------------------------------------------------------';
@@ -147,68 +153,19 @@ BEGIN
 
         PRINT'Truncating Table: bronze.DimCustomer';
         TRUNCATE TABLE bronze.DimCustomer;
+
         PRINT'Inserting Data Into: bronze.DimCustomer';
         INSERT INTO bronze.DimCustomer (
-            CustomerKey,
-            GeographyKey,
-            CustomerAlternateKey,
-            Title,
-            FirstName,
-            MiddleName,
-            LastName,
-            NameStyle,
-            BirthDate,
-            MaritalStatus,
-            Suffix,
-            Gender,
-            EmailAddress,
-            YearlyIncome,
-            TotalChildren,
-            NumberChildrenAtHome,
-            EnglishEducation,
-            SpanishEducation,
-            FrenchEducation,
-            EnglishOccupation,
-            SpanishOccupation,
-            FrenchOccupation,
-            HouseOwnerFlag,
-            NumberCarsOwned,
-            AddressLine1,
-            AddressLine2,
-            Phone,
-            DateFirstPurchase,
-            CommuteDistance
+            CustomerKey, GeographyKey, CustomerAlternateKey, Title, FirstName, MiddleName, LastName, NameStyle,
+            BirthDate, MaritalStatus, Suffix, Gender, EmailAddress, YearlyIncome, TotalChildren, NumberChildrenAtHome,
+            EnglishEducation, SpanishEducation, FrenchEducation, EnglishOccupation, SpanishOccupation, FrenchOccupation,
+            HouseOwnerFlag, NumberCarsOwned, AddressLine1, AddressLine2, Phone, DateFirstPurchase, CommuteDistance
         )
         SELECT 
-            CustomerKey,
-            GeographyKey,
-            CustomerAlternateKey,
-            Title,
-            FirstName,
-            MiddleName,
-            LastName,
-            NameStyle,
-            BirthDate,
-            MaritalStatus,
-            Suffix,
-            Gender,
-            EmailAddress,
-            YearlyIncome,
-            TotalChildren,
-            NumberChildrenAtHome,
-            EnglishEducation,
-            SpanishEducation,
-            FrenchEducation,
-            EnglishOccupation,
-            SpanishOccupation,
-            FrenchOccupation,
-            HouseOwnerFlag,
-            NumberCarsOwned,
-            AddressLine1,
-            AddressLine2,
-            Phone,
-            DateFirstPurchase,
-            CommuteDistance
+            CustomerKey, GeographyKey, CustomerAlternateKey, Title, FirstName, MiddleName, LastName, NameStyle,
+            BirthDate, MaritalStatus, Suffix, Gender, EmailAddress, YearlyIncome, TotalChildren, NumberChildrenAtHome,
+            EnglishEducation, SpanishEducation, FrenchEducation, EnglishOccupation, SpanishOccupation, FrenchOccupation,
+            HouseOwnerFlag, NumberCarsOwned, AddressLine1, AddressLine2, Phone, DateFirstPurchase, CommuteDistance
         FROM dbo.DimCustomer
 
         --  Audit Log
@@ -218,6 +175,7 @@ BEGIN
         PRINT'';
         SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+        PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
         PRINT '---------------------------';
 
         -- DimReseller
@@ -225,50 +183,17 @@ BEGIN
 
         PRINT 'Truncating Table bronze.DimReseller';
         TRUNCATE TABLE bronze.DimReseller;
+
         PRINT 'Inserting Data Into: bronze.DimReseller';
         INSERT INTO bronze.DimReseller (
-            ResellerKey,
-            GeographyKey,
-            ResellerAlternateKey,
-            Phone,
-            BusinessType,
-            ResellerName,
-            NumberEmployees,
-            OrderFrequency,
-            OrderMonth,
-            FirstOrderYear,
-            LastOrderYear,
-            ProductLine,
-            AddressLine1,
-            AddressLine2,
-            AnnualSales,
-            BankName,
-            MinPaymentType,
-            MinPaymentAmount,
-            AnnualRevenue,
-            YearOpened
+            ResellerKey, GeographyKey, ResellerAlternateKey, Phone, BusinessType, ResellerName, NumberEmployees,
+            OrderFrequency, OrderMonth, FirstOrderYear, LastOrderYear, ProductLine, AddressLine1, AddressLine2,
+            AnnualSales, BankName, MinPaymentType, MinPaymentAmount, AnnualRevenue, YearOpened
         ) 
         SELECT 
-            ResellerKey,
-            GeographyKey,
-            ResellerAlternateKey,
-            Phone,
-            BusinessType,
-            ResellerName,
-            NumberEmployees,
-            OrderFrequency,
-            OrderMonth,
-            FirstOrderYear,
-            LastOrderYear,
-            ProductLine,
-            AddressLine1,
-            AddressLine2,
-            AnnualSales,
-            BankName,
-            MinPaymentType,
-            MinPaymentAmount,
-            AnnualRevenue,
-            YearOpened
+            ResellerKey, GeographyKey, ResellerAlternateKey, Phone, BusinessType, ResellerName, NumberEmployees,
+            OrderFrequency, OrderMonth, FirstOrderYear, LastOrderYear, ProductLine, AddressLine1, AddressLine2,
+            AnnualSales, BankName, MinPaymentType, MinPaymentAmount, AnnualRevenue, YearOpened
         FROM dbo.DimReseller
 
         -- Audit Log
@@ -278,6 +203,7 @@ BEGIN
         PRINT '';
         SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+        PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
         PRINT '---------------------------';
 
         -- DimReseller
@@ -285,6 +211,7 @@ BEGIN
 
         PRINT 'Truncating Table: bronze.DimSalesTerritory';
         TRUNCATE TABLE bronze.DimSalesTerritory
+
         PRINT 'Inserting Data Into: bronze.DimSalesTerritory'
         INSERT INTO bronze.DimSalesTerritory (
             SalesTerritoryKey,
@@ -310,6 +237,7 @@ BEGIN
         PRINT '';
         SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+        PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
         PRINT '---------------------------';
 
         -- DimGeography
@@ -317,6 +245,7 @@ BEGIN
         
         PRINT 'Truncating Table: bronze.DimGeography';
         TRUNCATE TABLE bronze.DimGeography;
+
         PRINT 'Inserting Data Into: bronze.DimGeography';
         INSERT INTO bronze.DimGeography (
             GeographyKey,
@@ -353,6 +282,7 @@ BEGIN
         PRINT '';
         SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+        PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
         PRINT '---------------------------';
 
         PRINT  '------------------------------------------------------------';
@@ -364,72 +294,19 @@ BEGIN
 
         PRINT'Truncating Table: bronze.DimEmployee';
         TRUNCATE TABLE bronze.DimEmployee;
+
         PRINT'Inserting Data Into: bronze.DimEmployee';
         INSERT INTO bronze.DimEmployee (
-            EmployeeKey,
-            ParentEmployeeKey,
-            EmployeeNationalIDAlternateKey,
-            ParentEmployeeNationalIDAlternateKey,
-            SalesTerritoryKey,
-            FirstName,
-            LastName,
-            MiddleName,
-            NameStyle,
-            Title,
-            HireDate,
-            BirthDate,
-            LoginID,
-            EmailAddress,
-            Phone,
-            MaritalStatus,
-            EmergencyContactName,
-            EmergencyContactPhone,
-            SalariedFlag,
-            Gender,
-            PayFrequency,
-            BaseRate,
-            VacationHours,
-            SickLeaveHours,
-            CurrentFlag,
-            SalesPersonFlag,
-            DepartmentName,
-            StartDate,
-            EndDate,
-            Status,
-            EmployeePhoto
+            EmployeeKey, ParentEmployeeKey, EmployeeNationalIDAlternateKey, ParentEmployeeNationalIDAlternateKey, SalesTerritoryKey,
+            FirstName, LastName, MiddleName, NameStyle, Title, HireDate, BirthDate, LoginID, EmailAddress, Phone, MaritalStatus,
+            EmergencyContactName, EmergencyContactPhone, SalariedFlag, Gender, PayFrequency, BaseRate, VacationHours, SickLeaveHours,
+            CurrentFlag, SalesPersonFlag, DepartmentName, StartDate, EndDate, Status, EmployeePhoto
         )
         SELECT 
-            EmployeeKey,
-            ParentEmployeeKey,
-            EmployeeNationalIDAlternateKey,
-            ParentEmployeeNationalIDAlternateKey,
-            SalesTerritoryKey,
-            FirstName,
-            LastName,
-            MiddleName,
-            NameStyle,
-            Title,
-            HireDate,
-            BirthDate,
-            LoginID,
-            EmailAddress,
-            Phone,
-            MaritalStatus,
-            EmergencyContactName,
-            EmergencyContactPhone,
-            SalariedFlag,
-            Gender,
-            PayFrequency,
-            BaseRate,
-            VacationHours,
-            SickLeaveHours,
-            CurrentFlag,
-            SalesPersonFlag,
-            DepartmentName,
-            StartDate,
-            EndDate,
-            Status,
-            EmployeePhoto
+            EmployeeKey, ParentEmployeeKey, EmployeeNationalIDAlternateKey, ParentEmployeeNationalIDAlternateKey, SalesTerritoryKey,
+            FirstName, LastName, MiddleName, NameStyle, Title, HireDate, BirthDate, LoginID, EmailAddress, Phone, MaritalStatus,
+            EmergencyContactName, EmergencyContactPhone, SalariedFlag, Gender, PayFrequency, BaseRate, VacationHours, SickLeaveHours,
+            CurrentFlag, SalesPersonFlag, DepartmentName, StartDate, EndDate, Status, EmployeePhoto
         FROM dbo.DimEmployee
 
         -- Audit Log
@@ -439,6 +316,7 @@ BEGIN
         PRINT'';
         SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+        PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
         PRINT '---------------------------';
 
         -- DimDate
@@ -446,48 +324,17 @@ BEGIN
 
         PRINT'Truncating Table: bronze.DimDate';
         TRUNCATE TABLE bronze.DimDate;
+
         PRINT'Inserting Data Into: bronze.DimDate';
         INSERT INTO bronze.DimDate (
-            DateKey,
-            FullDateAlternateKey,
-            DayNumberOfWeek,
-            EnglishDayNameOfWeek,
-            SpanishDayNameOfWeek,
-            FrenchDayNameOfWeek,
-            DayNumberOfMonth,
-            DayNumberOfYear,
-            WeekNumberOfYear,
-            EnglishMonthName,
-            SpanishMonthName,
-            FrenchMonthName,
-            MonthNumberOfYear,
-            CalendarQuarter,
-            CalendarYear,
-            CalendarSemester,
-            FiscalQuarter,
-            FiscalYear,
-            FiscalSemester
+            DateKey, FullDateAlternateKey, DayNumberOfWeek, EnglishDayNameOfWeek, SpanishDayNameOfWeek, FrenchDayNameOfWeek,
+            DayNumberOfMonth, DayNumberOfYear, WeekNumberOfYear, EnglishMonthName, SpanishMonthName, FrenchMonthName,
+            MonthNumberOfYear, CalendarQuarter, CalendarYear, CalendarSemester, FiscalQuarter, FiscalYear, FiscalSemester
         )
         SELECT 
-            DateKey,
-            FullDateAlternateKey,
-            DayNumberOfWeek,
-            EnglishDayNameOfWeek,
-            SpanishDayNameOfWeek,
-            FrenchDayNameOfWeek,
-            DayNumberOfMonth,
-            DayNumberOfYear,
-            WeekNumberOfYear,
-            EnglishMonthName,
-            SpanishMonthName,
-            FrenchMonthName,
-            MonthNumberOfYear,
-            CalendarQuarter,
-            CalendarYear,
-            CalendarSemester,
-            FiscalQuarter,
-            FiscalYear,
-            FiscalSemester
+             DateKey, FullDateAlternateKey, DayNumberOfWeek, EnglishDayNameOfWeek, SpanishDayNameOfWeek, FrenchDayNameOfWeek,
+            DayNumberOfMonth, DayNumberOfYear, WeekNumberOfYear, EnglishMonthName, SpanishMonthName, FrenchMonthName,
+            MonthNumberOfYear, CalendarQuarter, CalendarYear, CalendarSemester, FiscalQuarter, FiscalYear, FiscalSemester
         FROM dbo.DimDate
 
         -- Audit Log
@@ -498,6 +345,7 @@ BEGIN
         PRINT '';
         SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+        PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
         PRINT '---------------------------';
 
         PRINT  '------------------------------------------------------------';
@@ -509,62 +357,19 @@ BEGIN
 
         PRINT'Truncating Table: bronze.FactInternetSales';
         TRUNCATE TABLE bronze.FactInternetSales;
+
         PRINT'Inserting Data Into: bronze.FactInternetSales';
         INSERT INTO bronze.FactInternetSales(
-            ProductKey,
-            OrderDateKey,
-            DueDateKey,
-            ShipDateKey,
-            CustomerKey,
-            PromotionKey,
-            CurrencyKey,
-            SalesTerritoryKey,
-            SalesOrderNumber,
-            SalesOrderLineNumber,
-            RevisionNumber,
-            OrderQuantity,
-            UnitPrice,
-            ExtendedAmount,
-            UnitPriceDiscountPct,
-            DiscountAmount,
-            ProductStandardCost,
-            TotalProductCost,
-            SalesAmount,
-            TaxAmt,
-            Freight,
-            CarrierTrackingNumber,
-            CustomerPONumber,
-            OrderDate,
-            DueDate,
-            ShipDate
+            ProductKey, OrderDateKey, DueDateKey, ShipDateKey, CustomerKey, PromotionKey, CurrencyKey, SalesTerritoryKey,
+            SalesOrderNumber, SalesOrderLineNumber, RevisionNumber, OrderQuantity, UnitPrice, ExtendedAmount, UnitPriceDiscountPct,
+            DiscountAmount, ProductStandardCost, TotalProductCost, SalesAmount, TaxAmt, Freight, CarrierTrackingNumber,
+            CustomerPONumber, OrderDate, DueDate, ShipDate
         )
         SELECT
-            ProductKey,
-            OrderDateKey,
-            DueDateKey,
-            ShipDateKey,
-            CustomerKey,
-            PromotionKey,
-            CurrencyKey,
-            SalesTerritoryKey,
-            SalesOrderNumber,
-            SalesOrderLineNumber,
-            RevisionNumber,
-            OrderQuantity,
-            UnitPrice,
-            ExtendedAmount,
-            UnitPriceDiscountPct,
-            DiscountAmount,
-            ProductStandardCost,
-            TotalProductCost,
-            SalesAmount,
-            TaxAmt,
-            Freight,
-            CarrierTrackingNumber,
-            CustomerPONumber,
-            OrderDate,
-            DueDate,
-            ShipDate
+            ProductKey, OrderDateKey, DueDateKey, ShipDateKey, CustomerKey, PromotionKey, CurrencyKey, SalesTerritoryKey,
+            SalesOrderNumber, SalesOrderLineNumber, RevisionNumber, OrderQuantity, UnitPrice, ExtendedAmount, UnitPriceDiscountPct,
+            DiscountAmount, ProductStandardCost, TotalProductCost, SalesAmount, TaxAmt, Freight, CarrierTrackingNumber,
+            CustomerPONumber, OrderDate, DueDate, ShipDate
         FROM dbo.FactInternetSales
 
         -- Audit Log
@@ -575,6 +380,7 @@ BEGIN
         PRINT'';
         SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+        PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
         PRINT '---------------------------';
 
         -- FactResellerSales
@@ -585,62 +391,16 @@ BEGIN
 
         PRINT'Inserting Data Into: bronze.FactResellerSales';
         INSERT INTO bronze.FactResellerSales (
-            ProductKey,
-            OrderDateKey,
-            DueDateKey,
-            ShipDateKey,
-            ResellerKey,
-            EmployeeKey,
-            PromotionKey,
-            CurrencyKey ,
-            SalesTerritoryKey,
-            SalesOrderNumber,
-            SalesOrderLineNumber,
-            RevisionNumber,
-            OrderQuantity,
-            UnitPrice,
-            ExtendedAmount,
-            UnitPriceDiscountPct,
-            DiscountAmount,
-            ProductStandardCost,
-            TotalProductCost,
-            SalesAmount,
-            TaxAmt,
-            Freight,
-            CarrierTrackingNumber,
-            CustomerPONumber,
-            OrderDate,
-            DueDate,
-            ShipDate
+            ProductKey, OrderDateKey, DueDateKey, ShipDateKey, ResellerKey, EmployeeKey, PromotionKey, CurrencyKey, SalesTerritoryKey,
+            SalesOrderNumber, SalesOrderLineNumber, RevisionNumber, OrderQuantity, UnitPrice, ExtendedAmount, UnitPriceDiscountPct,
+            DiscountAmount, ProductStandardCost, TotalProductCost, SalesAmount, TaxAmt, Freight, CarrierTrackingNumber, CustomerPONumber,
+            OrderDate, DueDate, ShipDate
         )
         SELECT 
-            ProductKey,
-            OrderDateKey,
-            DueDateKey,
-            ShipDateKey,
-            ResellerKey,
-            EmployeeKey,
-            PromotionKey,
-            CurrencyKey ,
-            SalesTerritoryKey,
-            SalesOrderNumber,
-            SalesOrderLineNumber,
-            RevisionNumber,
-            OrderQuantity,
-            UnitPrice,
-            ExtendedAmount,
-            UnitPriceDiscountPct,
-            DiscountAmount,
-            ProductStandardCost,
-            TotalProductCost,
-            SalesAmount,
-            TaxAmt,
-            Freight,
-            CarrierTrackingNumber,
-            CustomerPONumber,
-            OrderDate,
-            DueDate,
-            ShipDate
+            ProductKey, OrderDateKey, DueDateKey, ShipDateKey, ResellerKey, EmployeeKey, PromotionKey, CurrencyKey, SalesTerritoryKey,
+            SalesOrderNumber, SalesOrderLineNumber, RevisionNumber, OrderQuantity, UnitPrice, ExtendedAmount, UnitPriceDiscountPct,
+            DiscountAmount, ProductStandardCost, TotalProductCost, SalesAmount, TaxAmt, Freight, CarrierTrackingNumber, CustomerPONumber,
+            OrderDate, DueDate, ShipDate
         FROM dbo.FactResellerSales
 
         -- Audit Log
@@ -651,6 +411,7 @@ BEGIN
         PRINT '';
         SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+        PRINT 'Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
         PRINT '---------------------------';
 
         -- FactSalesQuota
@@ -682,6 +443,12 @@ BEGIN
         SELECT @rows_affected = @@ROWCOUNT, @end_time = GETDATE();
         INSERT INTO bronze.Pipeline_Log VALUES ('bronze.FactSalesQuota', @start_time, @end_time, DATEDIFF(second, @start_time, @end_time), @rows_affected, 'SUCCESS', NULL);
 
+        PRINT '';
+        SET @end_time = GETDATE();
+        PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+        PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
+        PRINT '---------------------------';
+
 
         -- Complete Batch Transaction
         COMMIT TRANSACTION;
@@ -699,11 +466,6 @@ BEGIN
 
         DELETE FROM bronze.Pipeline_Log
         WHERE StartTime < DATEADD(day, -30, GETDATE());
-
-        PRINT '';
-        SET @end_time = GETDATE();
-        PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
-        PRINT '---------------------------';
 
         SET @batch_end_time = GETDATE();
         PRINT '=============================================================';

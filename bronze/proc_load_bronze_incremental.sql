@@ -46,10 +46,11 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             PRINT 'Executing Incremental Load for Fact Tables';
             PRINT '==================================================================';
 
-        /* ==========================================================================
-            1. INCREMENTAL LOAD: FactInternetSales
-            =========================================================================
-        */
+            -- INCREMENTAL LOAD: FactInternetSales
+            PRINT  '------------------------------------------------------------';
+            PRINT  '1. INCREMENTAL LOAD: FactInternetSales Table';
+            PRINT  '------------------------------------------------------------';
+
             SET @start_time = GETDATE();
             
             -- DYNAMIC WATERMARK LOOKUP: Fallback to MIN(OrderDate) if unseeded
@@ -59,13 +60,16 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             );
 
             -- Empty Staging
+            PRINT'Truncating staging table: bronze.STG_FactInternetSales';
             TRUNCATE TABLE bronze.STG_FactInternetSales;
 
             -- Extract new delta rows into staging using OrderDate
+            PRINT'Inserting data into staging table: bronze.STG_FactInternetSales';
             INSERT INTO bronze.STG_FactInternetSales
             SELECT * FROM dbo.FactInternetSales WHERE OrderDate > @LastWaterMark;
 
             -- Safe Append: Only insert rows that don't already exist in Bronze (composite key check)
+            PRINT'Inserting data into final table: bronze.FactInternetSales';
             INSERT INTO bronze.FactInternetSales (
                 ProductKey, OrderDateKey, DueDateKey, ShipDateKey, CustomerKey, PromotionKey, CurrencyKey, SalesTerritoryKey, SalesOrderNumber,
                 SalesOrderLineNumber, RevisionNumber, OrderQuantity, UnitPrice, ExtendedAmount, UnitPriceDiscountPct, DiscountAmount, ProductStandardCost,
@@ -96,10 +100,15 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             SET @end_time = GETDATE();
             INSERT INTO bronze.Pipeline_Log VALUES ('bronze.FactInternetSales (Incremental)', @start_time, @end_time, DATEDIFF(second, @start_time, @end_time), @rows_affected, 'SUCCESS', NULL);
 
-        /*  ==========================================================================
-            2. INCREMENTAL LOAD: FactResellerSales
-            =========================================================================
-        */   
+            PRINT'';
+            PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+            PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
+            PRINT '---------------------------';
+
+            -- INCREMENTAL LOAD: FactResellerSales
+            PRINT  '------------------------------------------------------------';
+            PRINT  '2. INCREMENTAL LOAD: FactResellerSales Table';
+            PRINT  '------------------------------------------------------------';
 
             SET @start_time = GETDATE();
 
@@ -110,12 +119,15 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             )
 
             -- Empty Staging
+            PRINT'Truncating staging table: bronze.STG_FactResellerSales';
             TRUNCATE TABLE bronze.STG_FactResellerSales
             
+            PRINT'Inserting data into staging table: bronze.STG_FactResellerSales';
             -- Extract new delta rows into staging using OrderDate
             INSERT INTO bronze.STG_FactResellerSales
             SELECT * FROM dbo.FactResellerSales WHERE OrderDate > @LastWaterMark;
 
+            PRINT'Inserting data into final table: bronze.FactResellerSales';
             INSERT INTO bronze.FactResellerSales (
                 ProductKey, OrderDateKey, DueDateKey, ShipDateKey, ResellerKey, EmployeeKey, PromotionKey, CurrencyKey, SalesTerritoryKey,
                 SalesOrderNumber, SalesOrderLineNumber, RevisionNumber, OrderQuantity, UnitPrice, ExtendedAmount, UnitPriceDiscountPct,
@@ -145,9 +157,15 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             SET @end_time = GETDATE();
             INSERT INTO bronze.Pipeline_Log VALUES ('bronze.FactResellerSales (Incremental))', @start_time, @end_time, DATEDIFF(second, @start_time, @end_time), @rows_affected, 'SUCCESS',NULL);
 
-             /* ==========================================================================
-                3. INCREMENTAL LOAD: FactSalesQuota
-               =========================================================================  */
+            PRINT'';
+            PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+            PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
+            PRINT '---------------------------';
+
+             -- INCREMENTAL LOAD: FactSalesQuota
+            PRINT  '------------------------------------------------------------';
+            PRINT  '3. INCREMENTAL LOAD: FactSalesQuota Table';
+            PRINT  '------------------------------------------------------------';
 
             SET @start_time = GETDATE();
 
@@ -158,13 +176,15 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             )
 
             -- Empty Staging
+            PRINT'Truncating staging table: bronze.STG_FactSalesQuota';
             TRUNCATE TABLE bronze.STG_FactSalesQuota;
 
+            PRINT'Inserting data into staging table: bronze.STG_FactSalesQuota';
             INSERT INTO bronze.STG_FactSalesQuota
             SELECT * FROM dbo.FactSalesQuota WHERE [Date] > @LastWaterMark
 
+            PRINT'Inserting data into final table: bronze.FactSalesQuota';
             INSERT INTO bronze.FactSalesQuota (SalesQuotaKey,EmployeeKey,DateKey,CalendarYear,CalendarQuarter,SalesAmountQuota,Date)
-            
             SELECT stg.* FROM bronze.STG_FactSalesQuota stg 
             WHERE NOT EXISTS (
                 SELECT 1 FROM bronze.FactSalesQuota b  
@@ -189,22 +209,35 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             SET @end_time = GETDATE();
             INSERT INTO bronze.Pipeline_Log VALUES ('bronze.FactSalesQuota (Incremental)', @start_time, @end_time, DATEDIFF(second, @start_time, @end_time), @rows_affected, 'SUCCESS', NULL);
 
+            PRINT'';
+            PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+            PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
+            PRINT '---------------------------';
+
             PRINT '==================================================================';
             PRINT 'Executing Incremental Load for Dimension Tables';
             PRINT '==================================================================';
 
              /* 
              ==========================================================================
-               4. INCREMENTAL DIMENSION LOAD: DimCustomer (Hash-Based Upsert)
+               INCREMENTAL DIMENSION LOAD: DimCustomer (Hash-Based Upsert)
              =========================================================================
             */
+
+            -- INCREMENTAL LOAD: DimCustomers
+            PRINT  '------------------------------------------------------------';
+            PRINT  '1. INCREMENTAL LOAD: DimCustomer Table';
+            PRINT  '------------------------------------------------------------';
+
 
             SET @start_time = GETDATE();
 
             -- Step A: Empty Staging
+            PRINT'Truncating staging table: bronze.STG_DimCustomer';
             TRUNCATE TABLE bronze.STG_DimCustomer;
 
             -- Step B: Extract All records from source and generate fresh hashes
+            PRINT'Inserting data into staging table: bronze.STG_DimCustomer';
             INSERT INTO bronze.STG_DimCustomer (
                 CustomerKey, GeographyKey, CustomerAlternateKey, Title, FirstName, MiddleName, 
                 LastName, NameStyle, BirthDate, MaritalStatus, Suffix, Gender, EmailAddress,
@@ -233,6 +266,7 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             FROM dbo.DimCustomer;
             
             -- Step C: Insert Completely brand new records
+            PRINT'Inserting data into final table: bronze.DimCustomer';
             INSERT INTO bronze.DimCustomer (
                 CustomerKey, GeographyKey, CustomerAlternateKey, Title, FirstName, MiddleName, 
                 LastName, NameStyle, BirthDate, MaritalStatus, Suffix, Gender, EmailAddress,
@@ -276,21 +310,33 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             -- Calculate aggregate metrics
             SET @rows_affected = @inserted_rows + @updated_rows;
 
-            -- Audito Log
+            -- Audit Log
             SET @end_time = GETDATE();
-            INSERT INTO bronze.Pipeline_Log VALUES ('bronze.DimCustomer (Hash-Incremental)', @start_time, @end_time, DATEDIFF(second, @start_time, @end_time),@rows_affected, 'SUCCESS', NULL);
+            INSERT INTO bronze.Pipeline_Log VALUES ('bronze.DimCustomer (Hash-Incremental)', @start_time, @end_time, DATEDIFF(second, @start_time, @end_time), @rows_affected, 'SUCCESS', NULL);
+
+            PRINT'';
+            PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+            PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
+            PRINT '---------------------------';
 
             /* 
              ==========================================================================
-               5. INCREMENTAL DIMENSION LOAD: DimReseller (Hash-Based Upsert)
+              INCREMENTAL DIMENSION LOAD: DimReseller (Hash-Based Upsert)
              =========================================================================
             */
+
+            -- INCREMENTAL LOAD: DimReseller
+            PRINT  '------------------------------------------------------------';
+            PRINT  '2. INCREMENTAL LOAD: DimReseller Table';
+            PRINT  '------------------------------------------------------------';
 
             SET @start_time = GETDATE();
 
             -- Step A: Empty Staging
+            PRINT'Truncating staging table: bronze.STG_DimReseller';
             TRUNCATE TABLE bronze.STG_DimReseller;
 
+            PRINT'Inserting data into staging table: bronze.STG_DimReseller';
             -- Step B: Extract All records from source and generate fresh hashes
             INSERT INTO bronze.STG_DimReseller (
                 ResellerKey, GeographyKey, ResellerAlternateKey, Phone, BusinessType ,
@@ -316,6 +362,7 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
                 ) AS SourceHash
             FROM dbo.DimReseller
 
+            PRINT'Inserting data into final table: bronze.DimReseller';
             -- Step C: Insert Completely brand new records
             INSERT INTO bronze.DimReseller (
                 ResellerKey, GeographyKey, ResellerAlternateKey, Phone, BusinessType,
@@ -361,17 +408,29 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             SET @end_time = GETDATE();
             INSERT INTO bronze.Pipeline_Log VALUES ('bronze.DimReseller (Hash-Incremental)', @start_time, @end_time, DATEDIFF(second, @start_time, @end_time),@rows_affected, 'SUCCESS', NULL);
 
+            PRINT'';
+            PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+            PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
+            PRINT '---------------------------';
+
                /* 
              ==========================================================================
-               6. INCREMENTAL DIMENSION LOAD: DimGeography (Hash-Based Upsert)
+            INCREMENTAL DIMENSION LOAD: DimGeography (Hash-Based Upsert)
              =========================================================================
             */
+
+            -- INCREMENTAL LOAD: DimGeography
+            PRINT  '------------------------------------------------------------';
+            PRINT  '3. INCREMENTAL LOAD: DimGeography Table';
+            PRINT  '------------------------------------------------------------';
 
             SET @start_time = GETDATE();
 
             -- Step A: Empty Staging
+            PRINT'Truncating staging table: bronze.STG_DimGeography';
             TRUNCATE TABLE bronze.STG_DimGeography;
 
+            PRINT'Inserting data into staging table: bronze.STG_DimGeography';
             -- Step B: Extract All records from source and generate fresh hashes
             INSERT INTO bronze.STG_DimGeography (
                 GeographyKey, City, StateProvinceCode, StateProvinceName, CountryRegionCode,
@@ -392,6 +451,7 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
                 ) AS SourceHash
             FROM dbo.DimGeography
 
+            PRINT'Inserting data into final table: bronze.DimGeography ';
             -- Step C: Insert Completely brand new records
             INSERT INTO bronze.DimGeography (
                 GeographyKey, City, StateProvinceCode, StateProvinceName, CountryRegionCode,
@@ -431,18 +491,30 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             SET @end_time = GETDATE();
             INSERT INTO bronze.Pipeline_Log VALUES ('bronze.DimGeography (Hash-Incremental)', @start_time, @end_time, DATEDIFF(second,@start_time, @end_time), @rows_affected, 'SUCCESS', NULL);
 
+            PRINT'';
+            PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+            PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
+            PRINT '---------------------------';
+
             /* 
              ==========================================================================
-               7. INCREMENTAL DIMENSION LOAD: DimSalesTerritory (Hash-Based Upsert)
+              INCREMENTAL DIMENSION LOAD: DimSalesTerritory (Hash-Based Upsert)
              =========================================================================
             */
+
+             -- INCREMENTAL LOAD: DimSalesTerritory
+            PRINT  '------------------------------------------------------------';
+            PRINT  '4. INCREMENTAL LOAD: DimSalesTerritory Table';
+            PRINT  '------------------------------------------------------------';
 
             SET @start_time = GETDATE();
 
             -- Step A: Empty Staging
+            PRINT'Truncating staging table: bronze.STG_DimSalesTerritory';
             TRUNCATE TABLE bronze.STG_DimSalesTerritory;
 
             -- Step B: Extract All records from source and generate fresh hashes
+            PRINT'Inserting data into staging table: bronze.STG_DimSalesTerritory';
             INSERT INTO bronze.STG_DimSalesTerritory (
                 SalesTerritoryKey, SalesTerritoryAlternateKey, SalesTerritoryRegion,SalesTerritoryCountry,
                 SalesTerritoryGroup, SalesTerritoryImage, SourceHash
@@ -462,7 +534,8 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             FROM dbo.DimSalesTerritory
 
             -- Step C: Insert Completely brand new records
-             INSERT INTO bronze.DimSalesTerritory (
+            PRINT'Inserting data into final table: bronze.DimSalesTerritory';
+            INSERT INTO bronze.DimSalesTerritory (
                 SalesTerritoryKey, SalesTerritoryAlternateKey, SalesTerritoryRegion,SalesTerritoryCountry,
                 SalesTerritoryGroup, SalesTerritoryImage, RowHash
              )
@@ -492,25 +565,36 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             SELECT @updated_rows = @@ROWCOUNT;
 
             -- Calculate aggregate metrics
-            -- Dynamic evaluation ensures NULL safety
             SET @rows_affected = ISNULL(@inserted_rows, 0) + ISNULL(@updated_rows, 0);
 
             -- Audit Log
             SET @end_time = GETDATE();
             INSERT INTO bronze.Pipeline_Log VALUES ('bronze.DimSalesTerritory (Hash-Incremental)', @start_time, @end_time, DATEDIFF(second, @start_time, @end_time), @rows_affected, 'SUCCESS', NULL);
 
+            PRINT'';
+            PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+            PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
+            PRINT '---------------------------';
+
              /* 
              ==========================================================================
-               8. INCREMENTAL DIMENSION LOAD: DimProduct (Hash-Based Upsert)
+               INCREMENTAL DIMENSION LOAD: DimProduct (Hash-Based Upsert)
              =========================================================================
             */
+
+             -- INCREMENTAL LOAD: DimProduct
+            PRINT  '------------------------------------------------------------';
+            PRINT  '5. INCREMENTAL LOAD: DimProduct Table';
+            PRINT  '------------------------------------------------------------';
 
             SET @start_time = GETDATE();
 
             -- Step A: Empty Staging
+            PRINT'Truncating staging table: bronze.STG_DimProduct';
             TRUNCATE TABLE bronze.STG_DimProduct;
 
             -- Step B: Extract All records from source and generate fresh hashes
+            PRINT'Inserting data into staging table: bronze.STG_DimProduct';
             INSERT INTO bronze.STG_DimProduct (
                 ProductKey, ProductAlternateKey, ProductSubcategoryKey, WeightUnitMeasureCode,
                 SizeUnitMeasureCode, EnglishProductName, SpanishProductName, FrenchProductName,
@@ -572,6 +656,7 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             FROM dbo.DimProduct
 
             -- Step C: Insert Completely brand new records
+            PRINT'Inserting data into final table: bronze.DimProduct';
             INSERT INTO bronze.DimProduct (
                 ProductKey, ProductAlternateKey, ProductSubcategoryKey, WeightUnitMeasureCode,
                 SizeUnitMeasureCode, EnglishProductName, SpanishProductName, FrenchProductName,
@@ -650,18 +735,30 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             SET @end_time = GETDATE();
             INSERT INTO bronze.Pipeline_Log VALUES ('bronze.DimProduct (Hash-Incremental)', @start_time, @end_time, DATEDIFF(second, @start_time, @end_time), @rows_affected, 'SUCCESS', NULL);
 
-                  /* 
+            PRINT'';
+            PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+            PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
+            PRINT '---------------------------';
+
+            /* 
              ==========================================================================
-               9. INCREMENTAL DIMENSION LOAD: DimProductSubcategory (Hash-Based Upsert)
+              INCREMENTAL DIMENSION LOAD: DimProductSubcategory (Hash-Based Upsert)
              =========================================================================
             */
+
+             -- INCREMENTAL LOAD: DimProductSubcategory
+            PRINT  '------------------------------------------------------------';
+            PRINT  '6. INCREMENTAL LOAD: DimProductSubcategory Table';
+            PRINT  '------------------------------------------------------------';
 
             SET @start_time = GETDATE();
 
             -- Step A: Empty Staging
+            PRINT'Truncating staging table: bronze.STG_DimProductSubcategory';
             TRUNCATE TABLE bronze.STG_DimProductSubcategory;
 
             -- Step B: Extract All records from source and generate fresh hashes
+            PRINT'Inserting data into staging table: bronze.STG_DimProductSubcategory';
             INSERT INTO bronze.STG_DimProductSubcategory (
                  ProductSubcategoryKey, ProductSubcategoryAlternateKey, EnglishProductSubcategoryName,
                  SpanishProductSubcategoryName, FrenchProductSubcategoryName, ProductCategoryKey, SourceHash
@@ -681,6 +778,7 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             FROM dbo.DimProductSubcategory
 
             -- Step C: Insert Completely brand new records
+            PRINT'Inserting data into final table: bronze.DimProductSubcategory';
             INSERT INTO bronze.DimProductSubcategory (
                 ProductSubcategoryKey, ProductSubcategoryAlternateKey, EnglishProductSubcategoryName,
                 SpanishProductSubcategoryName, FrenchProductSubcategoryName, ProductCategoryKey, RowHash
@@ -711,25 +809,36 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             SELECT @updated_rows = @@ROWCOUNT;
 
             -- Calculate aggregate metrics
-            -- Dynamic evaluation ensures NULL safety
             SET @rows_affected = ISNULL(@inserted_rows, 0) + ISNULL(@updated_rows, 0);
 
             -- Audit Log
             SET @end_time = GETDATE();
             INSERT INTO bronze.Pipeline_Log VALUES ('bronze.DimProductSubcategory (Hash-Incremental)', @start_time, @end_time, DATEDIFF(second, @start_time, @end_time), @rows_affected, 'SUCCESS', NULL);
 
-                  /* 
+            PRINT'';
+            PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+            PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
+            PRINT '---------------------------';
+
+             /* 
              ==========================================================================
-               10. INCREMENTAL DIMENSION LOAD: DimProductCategory (Hash-Based Upsert)
+             INCREMENTAL DIMENSION LOAD: DimProductCategory (Hash-Based Upsert)
              =========================================================================
             */
+
+             -- INCREMENTAL LOAD: DimProductCategory
+            PRINT  '------------------------------------------------------------';
+            PRINT  '7. INCREMENTAL LOAD: DimProductCategory Table';
+            PRINT  '------------------------------------------------------------';
 
             SET @start_time = GETDATE();
 
             -- Step A: Empty Staging
+            PRINT'Truncating staging table: bronze.STG_DimProductCategory';
             TRUNCATE TABLE bronze.STG_DimProductCategory;
 
             -- Step B: Extract All records from source and generate fresh hashes
+            PRINT'Inserting data into staging table: bronze.STG_DimProductCategory';
             INSERT INTO bronze.STG_DimProductCategory (
                 ProductCategoryKey, ProductCategoryAlternateKey, EnglishProductCategoryName,
                 SpanishProductCategoryName, FrenchProductCategoryName,SourceHash
@@ -747,9 +856,10 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             FROM dbo.DimProductCategory
 
              -- Step C: Insert Completely brand new records
+             PRINT'Inserting data into final table: bronze.DimProductCategory';
              INSERT INTO bronze.DimProductCategory (
                 ProductCategoryKey, ProductCategoryAlternateKey, EnglishProductCategoryName,
-                SpanishProductCategoryName, FrenchProductCategoryName,RowHash
+                SpanishProductCategoryName, FrenchProductCategoryName, RowHash
              )
              SELECT 
                 stg.ProductCategoryKey, stg.ProductCategoryAlternateKey, stg.EnglishProductCategoryName,
@@ -770,7 +880,7 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
                     b.FrenchProductCategoryName = stg.FrenchProductCategoryName,
                     b.Rowhash = stg.SourceHash
              FROM bronze.DimProductCategory b
-             INNER JOIN bronze.STG_DimProductCategory stg  ON stg.ProductCategoryKey = stg.ProductCategoryKey
+             INNER JOIN bronze.STG_DimProductCategory stg  ON stg.ProductCategoryKey = b.ProductCategoryKey
              WHERE b.RowHash IS NULL OR b.RowHash <> stg.SourceHash 
 
             SELECT @updated_rows = @@ROWCOUNT;
@@ -782,18 +892,30 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             SET @end_time = GETDATE();
             INSERT INTO bronze.Pipeline_Log VALUES ('bronze.DimProductCategory (Hash-Incremental)', @start_time, @end_time, DATEDIFF(second, @start_time, @end_time), @rows_affected, 'SUCCESS', NULL);
 
+            PRINT'';
+            PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+            PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
+            PRINT '---------------------------';
+
                   /* 
              ==========================================================================
-               11. INCREMENTAL DIMENSION LOAD: DimEmployee (Hash-Based Upsert)
+               INCREMENTAL DIMENSION LOAD: DimEmployee (Hash-Based Upsert)
              =========================================================================
             */
+
+            -- INCREMENTAL LOAD: DimEmployee
+            PRINT  '------------------------------------------------------------';
+            PRINT  '8. INCREMENTAL LOAD: DimEmployee Table';
+            PRINT  '------------------------------------------------------------';
             
             SET @start_time = GETDATE();
 
             -- Step A: Empty Staging
+            PRINT'Truncating staging table: bronze.STG_DimEmployee';
             TRUNCATE TABLE bronze.STG_DimEmployee;
 
             -- Step B: Extract All records from source and generate fresh hashes
+            PRINT'Inserting data into staging table: bronze.STG_DimEmployee';
             INSERT INTO bronze.STG_DimEmployee (
                 EmployeeKey, ParentEmployeeKey, EmployeeNationalIDAlternateKey, ParentEmployeeNationalIDAlternateKey,
                 SalesTerritoryKey, FirstName, LastName, MiddleName, NameStyle, Title, HireDate, BirthDate, 
@@ -844,6 +966,7 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             FROM dbo.DimEmployee
 
              -- Step C: Insert Completely brand new records
+             PRINT'Inserting data into final table: bronze.DimEmployee';
              INSERT INTO bronze.DimEmployee (
                 EmployeeKey, ParentEmployeeKey, EmployeeNationalIDAlternateKey, ParentEmployeeNationalIDAlternateKey,
                 SalesTerritoryKey, FirstName, LastName, MiddleName, NameStyle, Title, HireDate, BirthDate, 
@@ -911,18 +1034,31 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             SET @end_time = GETDATE();
             INSERT INTO bronze.Pipeline_Log VALUES ('bronze.DimEmployee (Hash-Incremental)', @start_time, @end_time, DATEDIFF(second, @start_time, @end_time), @rows_affected, 'SUCCESS', NULL);
 
+            PRINT'';
+            PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+            PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
+            PRINT '---------------------------';
+
+
             /* 
             ==========================================================================
-               12. INCREMENTAL DIMENSION LOAD: DimDate (Hash-Based Upsert)
+               INCREMENTAL DIMENSION LOAD: DimDate (Hash-Based Upsert)
             =========================================================================
             */
+
+             -- INCREMENTAL LOAD: DimDate
+            PRINT  '------------------------------------------------------------';
+            PRINT  '9. INCREMENTAL LOAD: DimDate Table';
+            PRINT  '------------------------------------------------------------';
 
             SET @start_time = GETDATE();
 
             -- Step A: Empty Staging
+            PRINT'Truncating staging table: bronze.STG_DimDate';
             TRUNCATE TABLE bronze.STG_DimDate
 
             -- Step B: Extract All records from source and generate fresh hashes
+            PRINT'Inserting data into staging table: bronze.STG_DimDate';
             INSERT INTO bronze.STG_DimDate (
                 DateKey, FullDateAlternateKey, DayNumberOfWeek, EnglishDayNameOfWeek, SpanishDayNameOfWeek,
                 FrenchDayNameOfWeek, DayNumberOfMonth, DayNumberOfYear, WeekNumberOfYear, EnglishMonthName,
@@ -960,6 +1096,7 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             FROM dbo.DimDate
 
             -- Step C: Insert Completely brand new records
+            PRINT'Inserting data into final table: bronze.DimDate';
             INSERT INTO bronze.DimDate (
                 DateKey, FullDateAlternateKey, DayNumberOfWeek, EnglishDayNameOfWeek, SpanishDayNameOfWeek,
                 FrenchDayNameOfWeek, DayNumberOfMonth, DayNumberOfYear, WeekNumberOfYear, EnglishMonthName,
@@ -1013,6 +1150,12 @@ CREATE OR ALTER PROCEDURE bronze.load_bronze_incremental AS
             -- Audit Log
             SET @end_time = GETDATE();
             INSERT INTO bronze.Pipeline_Log VALUES ('bronze.DimDate (Hash-Incremental)', @start_time, @end_time, DATEDIFF(second, @start_time, @end_time), @rows_affected, 'SUCCESS', NULL);
+
+            PRINT'';
+            PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+            PRINT '>> Rows affected: ' + CAST(@rows_affected  AS NVARCHAR);
+            PRINT '---------------------------';
+
 
             /* ==========================================================================
                PIPELINE COMMIT & GLOBAL BATCH METRICS
