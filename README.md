@@ -1,343 +1,66 @@
-# AdventureWorksDW2022 Data Warehouse & Analytics Project
+# AdventureWorksDW2022 Data Warehouse and Analytics Project
 
-## Overview
+Welcome to the **AdventureWorksDW2022 Data Warehouse and Analytics** repository 🚀
+This project demonstrates a comprehensive data warehousing and analytics solution, from building an enterprise data warehouse to generating actionable executive insights. Designed as a portfolio project, it highlights industry best practices in data engineering and analytics.
 
-This project demonstrates the design and implementation of a modern Data Warehouse and Analytics solution using the **AdventureWorksDW2022** dataset.
-
-The solution follows the **Medallion Architecture** approach:
-
-* **Bronze Layer** – Raw data ingestion
-* **Silver Layer** – Data cleansing, transformation, and standardization
-* **Gold Layer** – Business-ready dimensional model using a Star Schema
-
-The objective of this project is to simulate a real-world analytics environment where raw operational data is transformed into trusted analytical datasets that support reporting, dashboarding, and business intelligence.
+### Data Architecture
+The data architecture for this project follows the Medallion Architecture __Bronze__, __Silver__, __Gold__ layers, bridging back-end database engineering directly to front-end business intelligence dashboards.
+<img width="804" height="588" alt="AdventureWorks Architecture Diagram" src="/Users/roelsomido/Screenshots/Data_Archicture.png" />
 
 ---
 
-## Project Goals
+## 🚀 Project Requirements
 
-* Build an end-to-end Data Warehouse solution
-* Implement Medallion Architecture best practices
-* Design a scalable dimensional model
-* Create fact and dimension tables for analytics
-* Develop business KPIs and metrics
-* Enable self-service reporting and dashboard creation
-* Demonstrate modern data engineering and analytics workflows
+### Building the Data Warehouse (Data Engineering)
 
----
+#### Objective
+Develop a modern, high-performance data warehouse using SQL Server based on the enterprise **AdventureWorksDW2022** schema to consolidate corporate data, enabling high-concurrency analytical reporting and informed decision-making.
 
-## Architecture
-
-### Medallion Architecture
-
-```text
-                +--------------------+
-                | Source Data        |
-                | AdventureWorksDW   |
-                +---------+----------+
-                          |
-                          v
-                +--------------------+
-                | Bronze Layer       |
-                | Raw Ingestion      |
-                +---------+----------+
-                          |
-                          v
-                +--------------------+
-                | Silver Layer       |
-                | Cleansed &         |
-                | Transformed Data   |
-                +---------+----------+
-                          |
-                          v
-                +--------------------+
-                | Gold Layer         |
-                | Star Schema        |
-                | Business Models    |
-                +---------+----------+
-                          |
-                          v
-                +--------------------+
-                | Analytics & BI     |
-                | Dashboards         |
-                +--------------------+
-```
+#### Specifications
+- **Data Source**: Import and model transaction data across relational Fact and Dimension schemas (e.g., *FactInternetSales*, *DimCustomer*, *DimProduct*).
+- **Data Quality**: Build an isolated landing staging framework for all tables in the Bronze layer to buffer and trace raw transactional payloads prior to database committing.
+- **Data Tracing**: Implement SHA-256 cryptographic hashing techniques on dateless Dimension columns to programmatically track downstream schema changes without relying on datetime flags.
+- **Delta Processing**: Utilize dynamic watermark checkpoint columns across all transactional Fact tables to isolate incremental delta rows, bypassing computationally heavy full table scans.
+- **Integration & Design**: Cleanse, standardize, and combine both relational and operational sources into an optimized, business-ready **Star Schema** in the Gold layer to eliminate redundancy and maximize analytical query efficiency.
 
 ---
 
-## Dataset
+### BI: Analytics & Reporting (Data Analytics)
 
-**Source:** AdventureWorksDW2022
+#### Objectives:
+Develop a production-ready, executive-level interactive Tableau Dashboard ("Global Sales & Performance Executive Hub") to deliver granular details into:
+- **Global Financial Health**: High-level corporate KPI tiles tracking **$16.3M in Sales**, **$6.8M in Net Profits**, Average Order Value (AOV), and an active **17.4K Customer Baseline** alongside color-coded Year-over-Year (% vs PY) alerts.
+- **Product Portfolio Performance**: An 80/20 Pareto Sales Analysis curve for inventory optimization, mapping out the critical product lines (Mountain, Road, Touring) driving the top revenue.
+- **Sales Trends & Regional Distribution**: Deep geographical visualizations tracking sales by country (US, AU, UK, DE, FR, CA) combined with dynamic horizontal bullet graphs to measure actual revenue against historical prior-year targets.
 
-AdventureWorksDW2022 is a Microsoft sample data warehouse that represents a fictional bicycle manufacturing company.
-
-The dataset includes:
-
-* Sales
-* Customers
-* Products
-* Geography
-* Resellers
-* Employees
-* Promotions
-* Dates
-
-These datasets provide a realistic environment for building enterprise analytics solutions.
+These insights empower stakeholders with key business metrics, enabling strategic decision-making at a single glance.
+<img width="1000" alt="Global Sales & Performance Executive Hub" src="/Users/roelsomido/Screenshots/executive_sales_hub_dashboard.png" />
 
 ---
 
-## Technology Stack
+## 🛡️ License
 
-| Component       | Technology                |
-| --------------- | ------------------------- |
-| Database        | SQL Server                |
-| Data Warehouse  | SQL Server Data Warehouse |
-| Data Modeling   | Star Schema               |
-| ETL / ELT       | SQL                       |
-| Analytics       | Tableau / Power BI        |
-| Version Control | Git                       |
-| Documentation   | Markdown                  |
+This project is licensed under [MIT License](LICENSE). You are free to use, modify and share this project with proper attribution.
 
----
+## 👨‍💻 About Me
 
-## Data Layers
+Hello! I'm **Roel Somido**, an Information Technology graduate transitioning into **Data Analytics & Data Engineering**. With a strong foundational background in IT infrastructure combined with years of professional experience handling high-volume operational systems, transactions, and data integrity in the technical support and services sector, I excel at bridging the gap between back-end data architecture and front-end business intelligence[cite: 1].
 
-### Bronze Layer
+Driven by a passion for uncovering "the story behind the numbers," I specialize in building robust, end-to-end data pipelines, modern data warehouse architectures, and interactive visualizations that empower data-driven decisions[cite: 1]. 
 
-Purpose:
+### 🛠️ My Analytics Toolkit
+* **Languages & Database Engineering:** Advanced SQL (CTEs, Window Functions, Joins), Medallion Architecture (Bronze/Silver/Gold data streams), ETL Pipelines, Star Schema Data Modeling[cite: 1].
+* **Business Intelligence & Visualization:** Tableau (Desktop & Public Cloud), Dynamic Dashboard Design, Data Storytelling[cite: 1].
+* **Core Systems & Tools:** Microsoft SQL Server, PostgreSQL, Excel (Power Query, Pivot Tables), Git/GitHub[cite: 1].
 
-* Store raw source data
-* Preserve historical records
-* Minimal transformations
-
-Examples:
-
-* Raw FactInternetSales
-* Raw FactResellerSales
-* Raw DimCustomer
-* Raw DimProduct
+### 📈 Featured Portfolio Projects
+* **[SQL Data Warehouse & Analytics Platform](https://github.com/Datanerdbytes/sql-data-warehouse-project-v3.git):** A modern warehouse framework using a multi-tiered Medallion pipeline to clean, model, and aggregate raw business data[cite: 1].
+* **Enterprise Data Warehouse & BI Hub (AdventureWorksDW2022)** (This Repo!): A full-stack solution featuring advanced hashing, watermarked delta pipelines, and a live executive performance command hub.
+* **[Sales & Customer Performance Dashboard](https://public.tableau.com/views/SuperstoreSalesCustomerDashboard_17704475544910/CustomerDashboard?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link):** An interactive Tableau layout mapping regional performance, revenue growth trends, and deep customer segmentation[cite: 1].
+* **[HR Analytics Dashboard](https://public.tableau.com/views/HRDashboard_17646633980990/HRSummary_1?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link):** An executive workforce intelligence view tracking employee headcount distributions and attrition risk factors[cite: 1].
 
 ---
-
-### Silver Layer
-
-Purpose:
-
-* Data cleansing
-* Data quality validation
-* Standardization
-* Business rule implementation
-
-Transformations include:
-
-* Data type standardization
-* Null handling
-* Duplicate removal
-* Data quality checks
-* Attribute enrichment
-
----
-
-### Gold Layer
-
-Purpose:
-
-* Deliver business-ready datasets
-* Support reporting and analytics
-* Provide a single source of truth
-
-The Gold layer is implemented using a dimensional model (Star Schema).
-
----
-
-## Dimensional Model
-
-### Fact Tables
-
-#### FactSales
-
-Business process:
-
-* Sales transactions
-
-Measures:
-
-* Sales Amount
-* Order Quantity
-* Unit Price
-* Discount Amount
-* Total Cost
-* Profit
-
----
-
-### Dimension Tables
-
-#### DimDate
-
-Attributes:
-
-* Date
-* Day
-* Month
-* Quarter
-* Year
-* Fiscal Period
-
-#### DimCustomer
-
-Attributes:
-
-* Customer Key
-* Customer Name
-* Gender
-* Marital Status
-* Occupation
-* Education
-
-#### DimProduct
-
-Attributes:
-
-* Product Name
-* Product Category
-* Product Subcategory
-* Color
-* Size
-* Model
-
-#### DimGeography
-
-Attributes:
-
-* City
-* State
-* Country
-* Region
-
-#### DimPromotion
-
-Attributes:
-
-* Promotion Name
-* Promotion Type
-* Discount Percentage
-
----
-
-## Star Schema
-
-```text
-                    DimDate
-                       |
-                       |
-DimCustomer ---- FactSales ---- DimProduct
-                       |
-                       |
-                 DimGeography
-                       |
-                       |
-                 DimPromotion
-```
-
----
-
-## Business Questions
-
-This project aims to answer key business questions such as:
-
-1. What are the sales trends over time?
-2. Which products generate the highest revenue?
-3. Which customer segments are most profitable?
-4. Which geographic regions drive the most sales?
-5. How effective are promotions?
-6. What are the seasonal sales patterns?
-7. What products contribute the highest profit margins?
-
----
-
-## KPIs
-
-The following KPIs are calculated:
-
-* Total Sales
-* Total Orders
-* Total Customers
-* Average Order Value
-* Gross Profit
-* Profit Margin %
-* Sales Growth %
-* Year-over-Year Growth
-* Customer Retention Rate
-* Top Product Revenue
-
----
-
-## Data Quality Checks
-
-Implemented validations include:
-
-* Null value detection
-* Duplicate record detection
-* Referential integrity validation
-* Data type validation
-* Surrogate key validation
-* Fact-to-dimension relationship checks
-
----
-
-## Future Enhancements
-
-* Incremental data loading
-* Slowly Changing Dimensions (SCD Type 2)
-* Data quality monitoring framework
-* Automated ETL pipelines
-* CI/CD deployment
-* Data catalog and lineage tracking
-* Real-time analytics architecture
-
----
-
-## Repository Structure
-
-```text
-AdventureWorks-DW-Analytics/
-│
-├── docs/
-│   └── architecture/
-│
-├── sql/
-│   ├── bronze/
-│   ├── silver/
-│   ├── gold/
-│   └── validation/
-│
-├── data-model/
-│   └── star-schema/
-│
-├── dashboards/
-│   ├── tableau/
-│   └── powerbi/
-│
-├── images/
-│
-├── README.md
-│
-└── LICENSE
-```
-
----
-
-## Project Outcomes
-
-This project demonstrates:
-
-* Data Warehousing
-* Data Engineering
-* Dimensional Modeling
-* SQL Development
-* Analytics Engineering
-* Business Intelligence
-* Dashboard Development
-
-The final solution provides a scalable and analytics-ready Data Warehouse built using modern data architecture principles and industry best practices.
+📫 **Let's Connect!**
+* **Email:** [roel.somido@icloud.com](mailto:roel.somido@icloud.com)[cite: 1]
+* **LinkedIn:** [www.linkedin.com/in/roel-somido-06853331b]
+* **Tableau Public:** [https://public.tableau.com/app/profile/roel.somido/vizzes]
