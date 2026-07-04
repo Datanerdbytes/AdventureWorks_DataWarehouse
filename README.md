@@ -5,7 +5,8 @@ This project demonstrates a comprehensive data warehousing and analytics solutio
 
 ### Data Architecture
 The data architecture for this project follows the Medallion Architecture __Bronze__, __Silver__, __Gold__ layers, bridging back-end database engineering directly to front-end business intelligence dashboards.
-<img width="804" height="588" alt="AdventureWorks Architecture Diagram" src="/Users/roelsomido/Screenshots/Data_Archicture.png" />
+<img width="641" height="529" alt="Data_Archicture" src="https://github.com/user-attachments/assets/606d7b70-0017-45ed-aafd-99b5db9aec17" />
+
 
 ---
 
@@ -34,7 +35,8 @@ Develop a production-ready, executive-level interactive Tableau Dashboard ("Glob
 - **Sales Trends & Regional Distribution**: Deep geographical visualizations tracking sales by country (US, AU, UK, DE, FR, CA) combined with dynamic horizontal bullet graphs to measure actual revenue against historical prior-year targets.
 
 These insights empower stakeholders with key business metrics, enabling strategic decision-making at a single glance.
-<img width="1000" alt="Global Sales & Performance Executive Hub" src="/Users/roelsomido/Screenshots/executive_sales_hub_dashboard.png" />
+<img width="1440" height="900" alt="executive_sales_hub_dashboard" src="https://github.com/user-attachments/assets/fcf906b0-cb9b-472d-9ac5-a03a4b6583e8" />
+
 
 ---
 
