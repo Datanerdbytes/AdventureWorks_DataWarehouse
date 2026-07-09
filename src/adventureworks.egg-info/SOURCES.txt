@@ -1,0 +1,9 @@
+README.md
+pyproject.toml
+src/__init__.py
+src/database.py
+src/adventureworks.egg-info/PKG-INFO
+src/adventureworks.egg-info/SOURCES.txt
+src/adventureworks.egg-info/dependency_links.txt
+src/adventureworks.egg-info/requires.txt
+src/adventureworks.egg-info/top_level.txt

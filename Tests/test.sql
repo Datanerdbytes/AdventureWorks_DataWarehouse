@@ -49,7 +49,8 @@ EXEC silver.load_silver_facts_incremental
 SELECT * FROM bronze.Pipeline_Log
 SELECT * FROM bronze.Pipeline_Watermarks
 
-SELECT * FROM silver.DimCustomer
+SELECT * FROM bronze.DimCustomer
+SELECT * FROM bronze.STG_DimCustomer
 
 
 

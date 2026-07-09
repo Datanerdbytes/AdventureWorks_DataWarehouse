@@ -22,6 +22,7 @@ Usage Example:
 =============================================================================
 */
 
+/*
 CREATE OR ALTER PROCEDURE bronze.load_bronze AS 
 BEGIN
     -- Configure SQL Server environment settings
@@ -499,4 +500,4 @@ BEGIN
         PRINT 'Error Message' + CAST(ERROR_STATE() AS NVARCHAR);
         PRINT '=============================================================';
     END CATCH
-END
+END */
