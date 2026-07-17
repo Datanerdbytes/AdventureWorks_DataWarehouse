@@ -75,7 +75,7 @@ Driven by a passion for uncovering "the story behind the numbers," I specialize 
 
 ### 📈 Featured Portfolio Projects
 * **[SQL Data Warehouse & Analytics Platform](https://github.com/Datanerdbytes/sql-data-warehouse-project-v3.git):** A modern warehouse framework using a multi-tiered Medallion pipeline to clean, model, and aggregate raw business data.
-* **Enterprise Data Warehouse & BI Hub (AdventureWorksDW2022)** (This Repo!): A full-stack solution featuring advanced hashing, watermarked delta pipelines, and a live executive performance command hub.
+* **Enterprise Data Warehouse & BI Hub (https://tinyurl.com/yfd8ebku)** (This Repo!): A full-stack solution featuring advanced hashing, watermarked delta pipelines, and a live executive performance command hub.
 * **[Sales & Customer Performance Dashboard](https://public.tableau.com/views/SuperstoreSalesCustomerDashboard_17704475544910/CustomerDashboard?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link):** An interactive Tableau layout mapping regional performance, revenue growth trends, and deep customer segmentation.
 * **[HR Analytics Dashboard](https://public.tableau.com/views/HRDashboard_17646633980990/HRSummary_1?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link):** An executive workforce intelligence view tracking employee headcount distributions and attrition risk factors.
 
