@@ -64,8 +64,8 @@ Driven by a passion for uncovering "the story behind the numbers," I specialize 
 
 ### 🛠️ My Analytics Toolkit
 * **Languages & Database Engineering:** Advanced SQL (CTEs, Window Functions, Joins), Medallion Architecture (Bronze/Silver/Gold data streams), ETL Pipelines, Star Schema Data Modeling[cite: 1].
-* **Business Intelligence & Visualization:** Tableau (Desktop & Public Cloud), Dynamic Dashboard Design, Data Storytelling[cite: 1].
-* **Core Systems & Tools:** Microsoft SQL Server, PostgreSQL, Excel (Power Query, Pivot Tables), Git/GitHub[cite: 1].
+* **Business Intelligence & Visualization:** Tableau (Desktop & Public Cloud), Dynamic Dashboard Design, Data Storytelling[See My Projects](https://tinyurl.com/nhamn5em).
+* **Core Systems & Tools:** Microsoft SQL Server, Python, Pandas, Matplotlib, Excel (Power Query, Pivot Tables), Git/GitHub[See My Projects](https://github.com/Datanerdbytes).
 
 ### 📈 Featured Portfolio Projects
 * **[SQL Data Warehouse & Analytics Platform](https://github.com/Datanerdbytes/sql-data-warehouse-project-v3.git):** A modern warehouse framework using a multi-tiered Medallion pipeline to clean, model, and aggregate raw business data[cite: 1].
