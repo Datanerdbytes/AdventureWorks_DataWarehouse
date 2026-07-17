@@ -44,10 +44,11 @@ Implemented a custom RFM (Recency, Frequency, Monetary) segmentation model in Pa
 
 <img width="1567" height="584" alt="adventureworks_charts" src="https://github.com/user-attachments/assets/e84f354c-c951-4fc7-8aac-16dc4b67f332" />
 
+### Top Products By Gross Revenue & Net Profit
+
 Aggregated multi-channel sales performance across distinct transactional engines. This visualization contrasts top revenue-generating assets with actual bottom-line net profitability, allowing product management teams to accurately evaluate product health beyond surface-level volume indicators.
 
 <img width="1584" height="684" alt="top_product_by_sale_profit" src="https://github.com/user-attachments/assets/b5842fdc-3164-4ad7-b39f-f0d2e956b5cf" />
-
 
 ---
 
