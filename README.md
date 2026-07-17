@@ -37,6 +37,13 @@ Develop a production-ready, executive-level interactive Tableau Dashboard ("Glob
 These insights empower stakeholders with key business metrics, enabling strategic decision-making at a single glance.
 <img width="1440" height="900" alt="executive_sales_hub_dashboard" src="https://github.com/user-attachments/assets/fcf906b0-cb9b-472d-9ac5-a03a4b6583e8" />
 
+---
+### Customer Lifetime Value & RFM Analysis
+
+#### Objective:
+Implemented a custom RFM (Recency, Frequency, Monetary) segmentation model in Pandas. As shown in the charts, while 'High Value Champions' represent a specific subset of the customer base, they contribute a massive, disproportionate share of total internet sales revenue—providing clear actionable targeting data for marketing teams.
+
+<img width="1567" height="584" alt="adventureworks_charts" src="https://github.com/user-attachments/assets/e84f354c-c951-4fc7-8aac-16dc4b67f332" />
 
 ---
 
