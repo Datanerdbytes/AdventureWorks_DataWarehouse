@@ -64,14 +64,14 @@ Driven by a passion for uncovering "the story behind the numbers," I specialize 
 
 ### 🛠️ My Analytics Toolkit
 * **Languages & Database Engineering:** Advanced SQL (CTEs, Window Functions, Joins), Medallion Architecture (Bronze/Silver/Gold data streams), ETL Pipelines, Star Schema Data Modeling[cite: 1].
-* **Business Intelligence & Visualization:** Tableau (Desktop & Public Cloud), Dynamic Dashboard Design, Data Storytelling[See My Projects](https://tinyurl.com/nhamn5em).
-* **Core Systems & Tools:** Microsoft SQL Server, Python, Pandas, Matplotlib, Excel (Power Query, Pivot Tables), Git/GitHub[See My Projects](https://github.com/Datanerdbytes).
+* **Business Intelligence & Visualization:** Tableau (Desktop & Public Cloud), Dynamic Dashboard Design, Data Storytelling [See My Projects](https://tinyurl.com/nhamn5em).
+* **Core Systems & Tools:** Microsoft SQL Server, Python, Pandas, Matplotlib, Git/GitHub [See My Projects](https://github.com/Datanerdbytes).
 
 ### 📈 Featured Portfolio Projects
-* **[SQL Data Warehouse & Analytics Platform](https://github.com/Datanerdbytes/sql-data-warehouse-project-v3.git):** A modern warehouse framework using a multi-tiered Medallion pipeline to clean, model, and aggregate raw business data[cite: 1].
+* **[SQL Data Warehouse & Analytics Platform](https://github.com/Datanerdbytes/sql-data-warehouse-project-v3.git):** A modern warehouse framework using a multi-tiered Medallion pipeline to clean, model, and aggregate raw business data[View Project].
 * **Enterprise Data Warehouse & BI Hub (AdventureWorksDW2022)** (This Repo!): A full-stack solution featuring advanced hashing, watermarked delta pipelines, and a live executive performance command hub.
-* **[Sales & Customer Performance Dashboard](https://public.tableau.com/views/SuperstoreSalesCustomerDashboard_17704475544910/CustomerDashboard?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link):** An interactive Tableau layout mapping regional performance, revenue growth trends, and deep customer segmentation[cite: 1].
-* **[HR Analytics Dashboard](https://public.tableau.com/views/HRDashboard_17646633980990/HRSummary_1?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link):** An executive workforce intelligence view tracking employee headcount distributions and attrition risk factors[cite: 1].
+* **[Sales & Customer Performance Dashboard](https://public.tableau.com/views/SuperstoreSalesCustomerDashboard_17704475544910/CustomerDashboard?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link):** An interactive Tableau layout mapping regional performance, revenue growth trends, and deep customer segmentation[View Project].
+* **[HR Analytics Dashboard](https://public.tableau.com/views/HRDashboard_17646633980990/HRSummary_1?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link):** An executive workforce intelligence view tracking employee headcount distributions and attrition risk factors[View Project].
 
 ---
 📫 **Let's Connect!**
