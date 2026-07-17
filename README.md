@@ -38,17 +38,23 @@ These insights empower stakeholders with key business metrics, enabling strategi
 <img width="1440" height="900" alt="executive_sales_hub_dashboard" src="https://github.com/user-attachments/assets/fcf906b0-cb9b-472d-9ac5-a03a4b6583e8" />
 
 ---
-### Customer Lifetime Value & RFM Analysis
+### RFM Customer Segmentation
 
 Implemented a custom RFM (Recency, Frequency, Monetary) segmentation model in Pandas. As shown in the charts, while 'High Value Champions' represent a specific subset of the customer base, they contribute a massive, disproportionate share of total internet sales revenue—providing clear actionable targeting data for marketing teams.
 
 <img width="1567" height="584" alt="adventureworks_charts" src="https://github.com/user-attachments/assets/e84f354c-c951-4fc7-8aac-16dc4b67f332" />
 
-### Top Products By Gross Revenue & Net Profit
+### Omni-channel Product Metrics
 
 Aggregated multi-channel sales performance across distinct transactional engines. This visualization contrasts top revenue-generating assets with actual bottom-line net profitability, allowing product management teams to accurately evaluate product health beyond surface-level volume indicators.
 
 <img width="1584" height="684" alt="top_product_by_sale_profit" src="https://github.com/user-attachments/assets/b5842fdc-3164-4ad7-b39f-f0d2e956b5cf" />
+
+### Time-series Growth Analysis
+
+Designed and populated a time-series growth mart aggregating transactional history into monthly performance windows. This multi-channel timeline reveals seasonal patterns, captures historical business shifts, and enables executive stakeholders to perform high-level trend analysis directly from the Gold schema.
+
+<img width="1584" height="584" alt="time_series_analysis" src="https://github.com/user-attachments/assets/3ffafd29-68ed-4ebf-8fcc-7a07006df758" />
 
 ---
 
